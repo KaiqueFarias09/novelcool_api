@@ -7,6 +7,6 @@ export class ScrapeMangaInfoController {
 
   @Get('manga_info')
   async getMangaInfo(@Headers('url') url: string) {
-    return await this.scrapeMangaInfoService.scrapeMangaInfo(url);
+    return this.scrapeMangaInfoService.scrapeMangaInfo(url);
   }
 }

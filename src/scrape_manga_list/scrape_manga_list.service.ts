@@ -104,7 +104,7 @@ export class ScrapeMangaListService {
       const data = [];
       scrappedPage('div.book-item').each((i, el) => {
         const manga = scrappedPage(el);
-        const validationInfo = this.createValidateInfo(manga);
+        const validationInfo = this.createValidationInfo(manga);
 
         if (this.isValidManga(validationInfo)) {
           data.push({
@@ -135,7 +135,7 @@ export class ScrapeMangaListService {
     }
   }
 
-  private createValidateInfo(manga: Cheerio<AnyNode>) {
+  private createValidationInfo(manga: Cheerio<AnyNode>) {
     const type = manga
       .find('div:nth-child(1) > a:nth-child(1) > div:nth-child(2)')
       .text();

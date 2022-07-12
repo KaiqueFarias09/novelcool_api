@@ -13,7 +13,7 @@ export class ScrapeMangaListController {
     @Query('language') language = 'br',
     @Query('page') page = 1,
   ) {
-    return await this.scrapeMangaListService.scrapeMangaList({
+    return this.scrapeMangaListService.scrapeMangaList({
       genre: inGenre,
       language: language,
       keyw: keyw,
