@@ -4,7 +4,7 @@ import axios from 'axios';
 import { CheerioAPI, load } from 'cheerio';
 
 @Injectable()
-export class ScrapeMangaInfoService {
+export class MangaService {
   async scrapeMangaInfo(url: string) {
     try {
       const page = await axios.get(url);

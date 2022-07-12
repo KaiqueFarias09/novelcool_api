@@ -1,9 +1,9 @@
 import { Controller, Get, Headers } from '@nestjs/common';
-import { ScrapeChapterService } from './scrape_chapter.service';
+import { ChapterService } from './chapter.service';
 
 @Controller()
-export class ScrapeChapterController {
-  constructor(private scrapeChapterService: ScrapeChapterService) {}
+export class ChapterController {
+  constructor(private scrapeChapterService: ChapterService) {}
 
   @Get('/read_manga')
   async getChapter(@Headers('url') url: string) {

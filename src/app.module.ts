@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ScrapeMangaListModule } from './scrape_manga_list/scrape_manga_list.module';
-import { ScrapeMangaInfoModule } from './scrape_manga_info/scrape_manga_info.module';
-import { ScrapeChapterModule } from './scrape_chapter/scrape_chapter.module';
+import { MangasModule } from './mangas/mangas.module';
+import { MangaModule } from './manga/manga.module';
+import { ChapterModule } from './chapter/chapter.module';
 
 @Module({
-  imports: [ScrapeMangaListModule, ScrapeMangaInfoModule, ScrapeChapterModule],
+  imports: [MangasModule, MangaModule, ChapterModule],
 })
 export class AppModule {}

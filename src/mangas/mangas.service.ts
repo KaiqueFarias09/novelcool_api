@@ -3,13 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { AnyNode, Cheerio, load } from 'cheerio';
 import axios from 'axios';
 
-type validateDataType = {
-  type: string;
-  mangaName: string;
-  mangaViews: number;
-};
+import { validateDataType } from './dto';
+
 @Injectable()
-export class ScrapeMangaListService {
+export class MangasService {
   async scrapeMangaList({
     genre,
     language,

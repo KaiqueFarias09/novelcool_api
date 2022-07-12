@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { CheerioAPI, load } from 'cheerio';
+import { load } from 'cheerio';
 import axios from 'axios';
 
 @Injectable()
-export class ScrapeChapterService {
+export class ChapterService {
   async scrapeChapter(url: string) {
     try {
       let chapterPage = await axios.get(`${url}-10-1html`);

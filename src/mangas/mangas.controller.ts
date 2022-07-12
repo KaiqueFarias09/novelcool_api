@@ -1,9 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ScrapeMangaListService } from './scrape_manga_list.service';
+import { MangasService } from './mangas.service';
 
 @Controller()
-export class ScrapeMangaListController {
-  constructor(private scrapeMangaListService: ScrapeMangaListService) {}
+export class MangasController {
+  constructor(private scrapeMangaListService: MangasService) {}
 
   @Get('manga_list')
   async getMangaList(
