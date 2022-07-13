@@ -7,32 +7,24 @@ import axios from 'axios';
 export class ChapterService {
   async scrapeChapter(url: string) {
     try {
-      let chapterPage = await axios.get(`${url}-10-1.html`);
-      let scrappedPage = load(chapterPage.data);
+      const firstChapterPage = await axios.get(`${url}-10-1.html`);
+      const firstScrappedPage = load(firstChapterPage.data);
 
-      const data = [];
-      scrappedPage('div.pic_box > img').each((_, el) => {
+      let data = [];
+      firstScrappedPage('div.pic_box > img').each((_, el) => {
         data.push({
-          img: scrappedPage(el).attr('src'),
+          img: firstScrappedPage(el).attr('src'),
         });
       });
 
       const chapterPagesLinks = this.createArrayOfLinks({
-        firstChapterPage: scrappedPage,
+        firstScrappedPage: firstScrappedPage,
         firstChapterLink: url,
       });
-      const otherPages = await axios
-        .all(chapterPagesLinks.map((link) => axios.get(link)))
-        .then((data) => data);
-
-      for (let i = 0; i < otherPages.length; i++) {
-        const newScrappedPage = load(otherPages[i].data);
-        newScrappedPage('div.pic_box > img').each((_, el) => {
-          data.push({
-            img: newScrappedPage(el).attr('src'),
-          });
-        });
-      }
+      data = await this.expandScrappedData({
+        pagesLinks: chapterPagesLinks,
+        data: data,
+      });
 
       return data;
     } catch (e) {
@@ -40,15 +32,37 @@ export class ChapterService {
     }
   }
 
+  private async expandScrappedData({
+    pagesLinks,
+    data,
+  }: {
+    pagesLinks: Array<string>;
+    data: Array<any>;
+  }) {
+    const pages = await axios
+      .all(pagesLinks.map((link) => axios.get(link)))
+      .then((pageData) => pageData);
+
+    for (let i = 0; i < pages.length; i++) {
+      const scrappedPage = load(pages[i].data);
+      scrappedPage('div.pic_box > img').each((_, el) => {
+        data.push({
+          img: scrappedPage(el).attr('src'),
+        });
+      });
+    }
+    return data;
+  }
+
   private createArrayOfLinks({
-    firstChapterPage,
+    firstScrappedPage,
     firstChapterLink,
   }: {
-    firstChapterPage: CheerioAPI;
+    firstScrappedPage: CheerioAPI;
     firstChapterLink: string;
   }) {
     const numberOfLinks = Number(
-      firstChapterPage(
+      firstScrappedPage(
         'div.mangaread-pagenav:nth-child(1) > select:nth-child(5)',
       ).text()[3],
     );
