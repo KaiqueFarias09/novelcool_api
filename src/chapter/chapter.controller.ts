@@ -3,10 +3,10 @@ import { ChapterService } from './chapter.service';
 
 @Controller()
 export class ChapterController {
-  constructor(private scrapeChapterService: ChapterService) {}
+  constructor(private chapterService: ChapterService) {}
 
   @Get('/read_manga')
   async getChapter(@Headers('url') url: string) {
-    return this.scrapeChapterService.scrapeChapter(url);
+    return this.chapterService.scrapeChapter(url);
   }
 }

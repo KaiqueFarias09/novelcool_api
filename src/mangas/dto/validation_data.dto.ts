@@ -1,5 +1,5 @@
-export type validateDataType = {
+export class validateDataType {
   type: string;
   mangaName: string;
   mangaViews: number;
-};
+}

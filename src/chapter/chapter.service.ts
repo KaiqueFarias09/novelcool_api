@@ -1,33 +1,37 @@
 import { Injectable } from '@nestjs/common';
 
-import { load } from 'cheerio';
+import { CheerioAPI, load } from 'cheerio';
 import axios from 'axios';
 
 @Injectable()
 export class ChapterService {
   async scrapeChapter(url: string) {
     try {
-      let chapterPage = await axios.get(`${url}-10-1html`);
+      let chapterPage = await axios.get(`${url}-10-1.html`);
       let scrappedPage = load(chapterPage.data);
 
       const data = [];
-      let chapterHasPages = true;
-      while (chapterHasPages) {
-        const nextBtnLink = scrappedPage(
-          'div.mangaread-pagenav:nth-child(1) > div:nth-child(6) > a:nth-child(1)',
-        ).attr('href');
+      scrappedPage('div.pic_box > img').each((_, el) => {
+        data.push({
+          img: scrappedPage(el).attr('src'),
+        });
+      });
 
-        scrappedPage('div.pic_box > img').each((i, el) => {
+      const chapterPagesLinks = this.createArrayOfLinks({
+        firstChapterPage: scrappedPage,
+        firstChapterLink: url,
+      });
+      const otherPages = await axios
+        .all(chapterPagesLinks.map((link) => axios.get(link)))
+        .then((data) => data);
+
+      for (let i = 0; i < otherPages.length; i++) {
+        const newScrappedPage = load(otherPages[i].data);
+        newScrappedPage('div.pic_box > img').each((_, el) => {
           data.push({
-            img: scrappedPage(el).attr('src'),
+            img: newScrappedPage(el).attr('src'),
           });
         });
-
-        chapterHasPages = this.thereIsMorePages(nextBtnLink);
-        if (chapterHasPages) {
-          chapterPage = await axios.get(nextBtnLink);
-          scrappedPage = load(chapterPage.data);
-        }
       }
 
       return data;
@@ -36,11 +40,23 @@ export class ChapterService {
     }
   }
 
-  private thereIsMorePages(nextBtnLink: string) {
-    if (nextBtnLink === '/') {
-      return false;
-    } else {
-      return true;
+  private createArrayOfLinks({
+    firstChapterPage,
+    firstChapterLink,
+  }: {
+    firstChapterPage: CheerioAPI;
+    firstChapterLink: string;
+  }) {
+    const numberOfLinks = Number(
+      firstChapterPage(
+        'div.mangaread-pagenav:nth-child(1) > select:nth-child(5)',
+      ).text()[3],
+    );
+
+    const links = [];
+    for (let i = 2; i <= numberOfLinks; i++) {
+      links.push(`${firstChapterLink}-10-${i}.html`);
     }
+    return links;
   }
 }

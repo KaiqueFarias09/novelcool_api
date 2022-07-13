@@ -1,24 +1,30 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { MangasService } from './mangas.service';
+import {
+  Controller,
+  Get,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 
+import { MangasService } from './mangas.service';
+import { QueryDto } from './dto';
 @Controller()
 export class MangasController {
-  constructor(private scrapeMangaListService: MangasService) {}
+  constructor(private mangasService: MangasService) {}
 
   @Get('manga_list')
-  async getMangaList(
-    @Query('keyw') keyw = '',
-    @Query('orby') orby = '',
-    @Query('inGenre') inGenre = '',
-    @Query('language') language = 'br',
-    @Query('page') page = 1,
-  ) {
-    return this.scrapeMangaListService.scrapeMangaList({
-      genre: inGenre,
-      language: language,
-      keyw: keyw,
-      orby: orby,
-      page: page,
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  )
+  async getMangaList(@Query() query: QueryDto) {
+    return this.mangasService.scrapeMangaList({
+      genre: query.inGenre,
+      language: query.language,
+      keyw: query.keyw,
+      orby: query.orby,
+      page: query.page,
     });
   }
 }
