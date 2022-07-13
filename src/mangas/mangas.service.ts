@@ -3,50 +3,23 @@ import { Injectable } from '@nestjs/common';
 import { AnyNode, Cheerio, load } from 'cheerio';
 import axios from 'axios';
 
-import { validateDataType } from './dto';
+import { QueryDto, validateDataType } from './dto';
 
 @Injectable()
 export class MangasService {
-  async scrapeMangaList({
-    genre,
-    language,
-    orby,
-    keyw,
-    page,
-  }: {
-    genre: string;
-    language: string;
-    orby: string;
-    keyw: string;
-    page: number;
-  }) {
-    if (orby === 'latestUpdates') {
-      return await this.scrapeRecentMangas({
-        genre: genre,
-        language: language,
-      });
+  async scrapeMangaList(query: QueryDto) {
+    if (query.orby === 'latestUpdates') {
+      return await this.scrapeRecentMangas(query);
     } else {
-      const data = await this.scrapeAdvancedSearch({
-        genre: genre,
-        language: language,
-        orby: orby,
-        keyw: keyw,
-        page: page,
-      });
+      const data = await this.scrapeAdvancedSearch(query);
       return data;
     }
   }
 
-  private async scrapeRecentMangas({
-    genre,
-    language,
-  }: {
-    genre: string;
-    language: string;
-  }) {
+  private async scrapeRecentMangas(query: QueryDto) {
     try {
       const page = await axios.get(
-        `https://${language}.novelcool.com/category/latest/category_id-${genre}.html`,
+        `https://${query.language}.novelcool.com/category/latest/category_id-${query.genre}.html`,
       );
       const scrappedPage = load(page.data);
 
@@ -77,25 +50,10 @@ export class MangasService {
     }
   }
 
-  private async scrapeAdvancedSearch({
-    language,
-    page,
-    genre,
-    orby,
-    keyw,
-  }: {
-    language: string;
-    page: number;
-    genre: string;
-    orby: string;
-    keyw: string;
-  }) {
+  private async scrapeAdvancedSearch(query: QueryDto) {
     try {
-      // I made this changes to the keyw because they can impact the search results, that's the way that I can produce the most results for search
-      keyw = keyw.charAt(0).toUpperCase() + keyw.slice(1).toLowerCase();
-      const advancedSearchPage = await axios.get(
-        `https://${language}.novelcool.com/search/?name_sel=contain&name=${keyw}&author_sel=contain&author=&category_id=${genre}&out_category_id=&publish_year=&completed_series=${orby}&rate_star=&page=${page}`,
-      );
+      const searchUrl = this.createSearchUrl(query);
+      const advancedSearchPage = await axios.get(searchUrl);
       const scrappedPage = load(advancedSearchPage.data);
 
       const data = [];
@@ -121,6 +79,16 @@ export class MangasService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  private createSearchUrl(query: QueryDto) {
+    // I made this changes to the keyw because they can impact the search results, that's the way that I can produce the most results for search
+    let keyw = query.keyw;
+    keyw = keyw.charAt(0).toUpperCase() + keyw.slice(1).toLowerCase();
+
+    const searchUrl =
+      `https://${query.language}.novelcool.com/search/?name_sel=contain&name=${query.keyw}&author_sel=contain&author=&category_id=${query.genre}&out_category_id=&publish_year=&completed_series=${query.orby}&rate_star=&page=${query.page}`.trim();
+    return searchUrl;
   }
 
   private isValidManga(validateData: validateDataType) {

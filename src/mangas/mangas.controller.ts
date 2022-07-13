@@ -20,7 +20,7 @@ export class MangasController {
   )
   async getMangaList(@Query() query: QueryDto) {
     return this.mangasService.scrapeMangaList({
-      genre: query.inGenre,
+      genre: query.genre,
       language: query.language,
       keyw: query.keyw,
       orby: query.orby,

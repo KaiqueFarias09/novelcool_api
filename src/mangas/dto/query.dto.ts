@@ -1,7 +1,7 @@
 export class QueryDto {
   keyw = '';
   orby = '';
-  inGenre = '';
+  genre = '';
   language = 'br';
   page = 1;
 }
