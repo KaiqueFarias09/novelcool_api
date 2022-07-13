@@ -36,7 +36,7 @@ export class ChapterService {
     pagesLinks,
     data,
   }: {
-    pagesLinks: Array<string>;
+    pagesLinks: Array<any>;
     data: Array<any>;
   }) {
     const pages = await axios
