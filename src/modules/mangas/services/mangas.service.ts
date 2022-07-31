@@ -36,10 +36,10 @@ export class MangasService {
               .find('div:nth-child(4) > a:nth-child(1) > div:nth-child(1)')
               .text()
               .trim(),
-            img: manga
+            image: manga
               .find('div:nth-child(1) > a:nth-child(1) > img:nth-child(1)')
               .attr('lazy_url'),
-            src: manga.find('div:nth-child(1) > a:nth-child(1)').attr('href'),
+            link: manga.find('div:nth-child(1) > a:nth-child(1)').attr('href'),
           });
         }
       });
@@ -66,10 +66,10 @@ export class MangasService {
               .find('div:nth-child(4) > a:nth-child(1) > div:nth-child(1)')
               .text()
               .trim(),
-            img: manga
+            image: manga
               .find('div:nth-child(1) > a:nth-child(1) > img:nth-child(1)')
               .attr('src'),
-            src: manga.find('div:nth-child(1) > a:nth-child(1)').attr('href'),
+            link: manga.find('div:nth-child(1) > a:nth-child(1)').attr('href'),
           });
         }
       });

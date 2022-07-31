@@ -13,7 +13,7 @@ export class ChapterService {
       let data = [];
       firstScrappedPage('div.pic_box > img').each((_, el) => {
         data.push({
-          img: firstScrappedPage(el).attr('src'),
+          image: firstScrappedPage(el).attr('src'),
         });
       });
 
@@ -47,7 +47,7 @@ export class ChapterService {
       const scrappedPage = load(pages[i].data);
       scrappedPage('div.pic_box > img').each((_, el) => {
         data.push({
-          img: scrappedPage(el).attr('src'),
+          image: scrappedPage(el).attr('src'),
         });
       });
     }

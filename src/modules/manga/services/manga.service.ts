@@ -15,7 +15,7 @@ export class MangaService {
         title: scrappedPage('.bk-side-intro-most > h1:nth-child(1)')
           .text()
           .trim(),
-        img: scrappedPage(
+        image: scrappedPage(
           'div.bookinfo-pic:nth-child(1) > a:nth-child(1) > img:nth-child(1)',
         ).attr('src'),
         status: scrappedPage('.bk-cate-type1 > a:nth-child(1)').text().trim(),
