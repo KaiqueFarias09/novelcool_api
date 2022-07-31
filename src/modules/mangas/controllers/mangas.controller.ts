@@ -6,8 +6,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { MangasService } from './mangas.service';
-import { QueryDto } from './dto';
+import { MangasService } from '../services/mangas.service';
+import { QueryDto } from '../dto';
 @Controller()
 export class MangasController {
   constructor(private mangasService: MangasService) {}

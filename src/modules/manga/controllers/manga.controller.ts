@@ -1,5 +1,5 @@
 import { Controller, Get, Headers } from '@nestjs/common';
-import { MangaService } from './manga.service';
+import { MangaService } from '../services/manga.service';
 
 @Controller()
 export class MangaController {

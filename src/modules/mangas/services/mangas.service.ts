@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { AnyNode, Cheerio, load } from 'cheerio';
 import axios from 'axios';
 
-import { QueryDto, validateDataType } from './dto';
+import { QueryDto, validateDataType } from '../dto';
 
 @Injectable()
 export class MangasService {
@@ -32,7 +32,6 @@ export class MangasService {
 
         if (type !== 'Novel') {
           data.push({
-            index: i,
             title: manga
               .find('div:nth-child(4) > a:nth-child(1) > div:nth-child(1)')
               .text()
@@ -63,7 +62,6 @@ export class MangasService {
 
         if (this.isValidManga(validationInfo)) {
           data.push({
-            index: i,
             title: manga
               .find('div:nth-child(4) > a:nth-child(1) > div:nth-child(1)')
               .text()
